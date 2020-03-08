@@ -1,0 +1,39 @@
+description: |
+  Append some shell functions and environment variables to BASH_ENV.
+steps:
+  - run:
+      name: Set up BASH_ENV
+      shell: /bin/bash -eu -o pipefail
+      command: |
+        echo '
+        COLOR_1="\e[31;1m"
+        COLOR_2="\e[32;1m"
+        COLOR_OFF="\e[m"
+        echo_green() {
+          echo "${COLOR_2}$*${COLOR_OFF}"
+        }
+        echo_error() {
+          echo -e "${COLOR_1}$*${COLOR_OFF}" >&2
+        }
+        echo_command_result_template() {
+          local tempfile; tempfile=$(mktemp)
+          echo "{{ .Env.HEADER }}" > $tempfile
+          echo "" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "$ {{ .Env.COMMAND }}" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "" >> $tempfile
+          echo "<details>" >> $tempfile
+          echo "<summary>Command Output</summary>" >> $tempfile
+          echo "" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "{{ .Env.OUTPUT }}" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "" >> $tempfile
+          echo "</details>" >> $tempfile
+          cat $tempfile
+          rm $tempfile
+        }
+        ' >> $BASH_ENV
+        echo "export PATH=$PWD/.tfenv/bin:$PWD/bin:$PATH" >> $BASH_ENV
+        cat $BASH_ENV

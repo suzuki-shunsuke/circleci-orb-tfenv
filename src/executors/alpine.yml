@@ -1,0 +1,5 @@
+description: |
+  The Executor for this Orb's commands and jobs.
+  This uses the official Alpine Docker image.
+docker:
+  - image: alpine:3.11.3

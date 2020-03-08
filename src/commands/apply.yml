@@ -1,0 +1,34 @@
+description: |
+  Run `terraform apply` and add a comment to the pull request or Git commit.
+parameters:
+  apply_options:
+    type: string
+    default: ""
+    description: |
+      The options of `terraform apply` command. The option `-auto-approve` is set automatically.
+      For example, `-refresh=false -parallelism=20`.
+steps:
+  - run:
+      name: Install requirements
+      command: apk add ca-certificates bash curl
+  # requirement: ca-certificates
+  - attach_workspace:
+      at: .
+  - run:
+      name: terraform apply
+      shell: /bin/bash -eu -o pipefail
+      command: |
+        root_dir=$PWD
+        for changed_file in $(find changed -name changed.txt); do
+          service_env_dir=$(dirname ${changed_file##changed/})
+          cd $root_dir/src/$service_env_dir
+          tfenv install
+          terraform init
+          set +o errexit
+          terraform apply -auto-approve << parameters.apply_options >> > /tmp/apply.txt
+          code="$?"
+          set -e
+          cd $root_dir/src
+          cat /tmp/apply.txt | tfnotify apply --title "Apply $service_env_dir"
+          exit $code
+        done

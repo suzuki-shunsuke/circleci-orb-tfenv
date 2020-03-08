@@ -1,0 +1,20 @@
+description: |
+  Run `terraform apply` and add a comment to the pull request or Git commit.
+executor: << parameters.executor >>
+parameters:
+  executor:
+    type: executor
+    default: alpine
+    description: |
+      Custom executor. The executor must use an Alpine based Docker image.
+  apply_options:
+    type: string
+    default: ""
+    description: |
+      The options of `terraform apply` command. The option `-auto-approve` is set automatically.
+      For example, `-refresh=false -parallelism=20`.
+steps:
+  - install_bash
+  - setup_bash_env
+  - apply:
+      apply_options: << parameters.apply_options >>

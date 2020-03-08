@@ -1,0 +1,59 @@
+description: |
+  Run lints and tests and add a comment to the pull request or Git commit.
+parameters:
+  dir:
+    type: string
+    description: |
+      the relative path from the repository root directory to Terraform configuration root directory.
+      In the directory, Terraform commands such as `terraform plan` are executed.
+  custom_tests:
+    type: steps
+    default: []
+  plan_options:
+    type: string
+    default: ""
+    description: |
+      The options of `terraform plan` command. The option `-detailed-exitcode` is set automatically.
+      For example, `-refresh=false -parallelism=20`.
+  skip_plan:
+    type: boolean
+    default: false
+    description: |
+      If this parameter is `true`, `terraform plan` isn't executed.
+steps:
+  - run:
+      name: Install requirements
+      command: apk add ca-certificates bash curl
+  # requirement: ca-certificates
+  - attach_workspace:
+      at: .
+  - run:
+      name: tfenv install
+      shell: /bin/bash -eu -o pipefail
+      command: |
+        cd src/<< parameters.dir >>
+        # requirement: curl
+        # requirement: tfenv
+        # requirement: bash
+        tfenv install
+  - run:
+      name: terraform init
+      shell: /bin/bash -eu -o pipefail
+      command: |
+        cd src/<< parameters.dir >>
+        terraform init
+  - fmt:
+      dir: << parameters.dir >>
+  - validate:
+      dir: << parameters.dir >>
+  - steps: << parameters.custom_tests >>
+  - unless:
+      condition: << parameters.skip_plan >>
+      steps:
+        - plan:
+            dir: << parameters.dir >>
+            plan_options: << parameters.plan_options >>
+  - persist_to_workspace:
+      root: .
+      paths:
+        - "changed/<< parameters.dir >>/*"
