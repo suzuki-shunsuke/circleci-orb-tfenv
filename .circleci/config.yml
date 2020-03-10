@@ -9,6 +9,26 @@ executors:
     docker:
       - image: circleci/circleci-cli:0.1.6949-alpine
 
+workflows:
+  build:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+          
+      - publish-dev-of-pr:
+          requires:
+            - build
+      - publish:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+
 jobs:
   build:
     executor: circleci
@@ -42,20 +62,3 @@ jobs:
               # requirement: environment variable CIRCLECI_CLI_TOKEN
               circleci orb publish orb.yml suzuki-shunsuke/tfenv@dev:${CIRCLE_SHA1}
             fi
-
-workflows:
-  build:
-    jobs:
-      - build
-      - publish-dev-of-pr:
-          requires:
-            - build
-      - publish:
-          requires:
-            - build
-          filters:
-            tags:
-              only:
-                - /.+/
-            branches:
-              ignore: /.*/
