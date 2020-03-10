@@ -1,0 +1,5 @@
+description: Install Bash
+steps:
+  - run:
+      name: Install Bash
+      command: apk add bash

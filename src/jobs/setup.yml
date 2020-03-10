@@ -1,0 +1,28 @@
+description: |
+  Checkout source code and install some tools such as tfenv and tfnotify and persist them to the workspace.
+executor: << parameters.executor >>
+parameters:
+  executor:
+    type: executor
+    default: alpine
+    description: |
+      Custom executor. The executor must use an Alpine based Docker image.
+  custom_setup:
+    type: steps
+    default: []
+    description: |
+      Custom setup steps. If you want to use custom tools in custom tests, please install them in the custom steps.
+  tfnotify_version:
+    type: string
+    default: v0.5.2
+    description: |
+      The version of tfnotify. tfnotify is downloaded from the release page.
+      https://github.com/mercari/tfnotify/releases/download/<< parameters.tfnotify_version >>/tfnotify_linux_amd64.tar.gz
+steps:
+  - setup:
+      custom_setup: << parameters.custom_setup >>
+      tfnotify_version: << parameters.tfnotify_version >>
+  - persist_to_workspace:
+      root: .
+      paths:
+        - "*"

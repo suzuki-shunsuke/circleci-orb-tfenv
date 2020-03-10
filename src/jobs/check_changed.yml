@@ -1,0 +1,14 @@
+executor: << parameters.executor >>
+parameters:
+  executor:
+    type: executor
+    default: alpine
+    description: |
+      Custom executor. The executor must use an Alpine based Docker image.
+description: |
+  Check the result of `terraform plan`.
+  If no states are changed, add a comment to the pull request or Git commit.
+steps:
+  - install_bash
+  - setup_bash_env
+  - check_changed

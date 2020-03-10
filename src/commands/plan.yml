@@ -1,0 +1,42 @@
+description: |
+  Run `terraform plan` and add a comment to the pull request or Git commit.
+parameters:
+  dir:
+    type: string
+    description: |
+      the relative path from the repository root directory to Terraform configuration root directory.
+      In the directory, `terraform plan` is executed.
+  plan_options:
+    type: string
+    default: ""
+    description: |
+      The options of `terraform plan` command. The option `-detailed-exitcode` is set automatically.
+      For example, `-refresh=false -parallelism=20`.
+steps:
+  - run:
+      name: terraform plan
+      shell: /bin/bash -eu -o pipefail
+      command: |
+        root_dir=$PWD
+        cd src/<< parameters.dir >>
+        set +o errexit
+        terraform plan -detailed-exitcode << parameters.plan_options >> > /tmp/plan.txt
+        code=$?
+        set -e
+        cd $root_dir/src
+        mkdir -p ../changed/<< parameters.dir >>
+        touch ../changed/<< parameters.dir >>/dummy.txt
+        if [ "$code" = "0" ]; then
+          # no changed
+          cat /tmp/plan.txt
+          exit 0
+        fi
+        cat /tmp/plan.txt | tfnotify plan --title "Plan << parameters.dir >>"
+        if [ "$code" = "2" ]; then
+          # changed
+          touch ../changed/<< parameters.dir >>/changed.txt
+          exit 0
+        fi
+        # failed
+        exit 1
+

@@ -1,0 +1,78 @@
+description: |
+  Lint and test and apply Terraform configuration.
+  https://github.com/suzuki-shunsuke/example-circleci-orb-tfenv/pull/1
+usage:
+  version: 2.1
+  orbs:
+    tfenv: suzuki-shunsuke/tfenv@dev:0.1.0-0
+  workflows:
+    build:
+      jobs:
+        - tfenv/setup:
+            name: setup
+
+        - tfenv/test:
+            name: test foo/staging
+            requires:
+              - setup
+            dir: services/foo/staging
+            custom_tests:
+              - tflint:
+                  dir: services/foo/staging
+
+        - tfenv/test:
+            name: test foo/production
+            requires:
+              - setup
+            dir: services/foo/production
+            custom_tests:
+              - tflint:
+                  dir: services/foo/production
+
+        - tfenv/check_changed:
+            name: Check changed states
+            requires:
+              - setup
+              - test foo/staging
+              - test foo/production
+
+        - tfenv/apply:
+            name: apply
+            requires:
+              - setup
+              - test foo/staging
+              - test foo/production
+            filters:
+              branches:
+                only:
+                  - master
+
+  # Custom test with tflint
+  commands:
+    install_tflint:
+      steps:
+        - run:
+            name: Install tflint
+            shell: /bin/bash -eu -o pipefail
+            command: |
+              curl -LO https://github.com/terraform-linters/tflint/releases/download/v0.15.1/tflint_linux_amd64.zip
+              unzip tflint_linux_amd64.zip
+              mv tflint bin
+              chmod a+x bin/tflint
+              rm tflint_linux_amd64.zip
+    tflint:
+      parameters:
+        dir:
+          type: string
+      steps:
+        - install_tflint
+        - run:
+            name: tflint
+            shell: /bin/bash -eu -o pipefail
+            command: |
+              cd src/<< parameters.dir >>
+              if ! tflint; then
+                echo_error "tflint is failure"
+                github-comment -template ":x: [Job Link]($CIRCLE_BUILD_URL) [<< parameters.dir >>] tflint is failure"
+                exit 1
+              fi

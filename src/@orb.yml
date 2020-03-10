@@ -1,0 +1,13 @@
+---
+version: 2.1
+description: |
+  Lint and test and apply Terraform configuration.
+  We assume tfenv is used at the target project.
+  
+  Requirements
+
+  * The configuration file of tfnotify is required on the repository root directory.
+  * The project Environment variable "GITHUB_TOKEN" is required to post a comment to GitHub comment or pull request
+  * .terraform-version is required for tfenv
+display:
+  source_url: https://github.com/suzuki-shunsuke/circleci-orb-tfenv

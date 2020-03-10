@@ -1,0 +1,25 @@
+description: Run `terraform fmt -check` to test if the code is formatted.
+parameters:
+  dir:
+    type: string
+    description: |
+      the relative path from the repository root directory to Terraform configuration root directory.
+      In the directory, `terraform fmt -check` is executed.
+steps:
+  - run:
+      name: terraform fmt -check
+      shell: /bin/bash -eu -o pipefail
+      command: |
+        cd src/<< parameters.dir >>
+        if ! terraform fmt -check > /dev/null 2>&1; then
+          echo_error "Please run 'terraform fmt'"
+          terraform fmt -diff -write=false
+          if [ -n "${CIRCLE_PULL_REQUEST:-""}" ]; then
+            echo_command_result_template |
+              HEADER=":x: [Job Link]($CIRCLE_BUILD_URL) [<< parameters.dir >>] Please run 'terraform fmt'" \
+              COMMAND="terraform fmt -diff -write=false" \
+              OUTPUT=$(terraform fmt -diff -write=false -no-color) \
+              gomplate | github-comment
+          fi
+          exit 1
+        fi

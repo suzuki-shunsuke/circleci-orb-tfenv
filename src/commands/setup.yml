@@ -1,0 +1,59 @@
+description: |
+  Checkout source code and install some tools such as tfenv and tfnotify.
+parameters:
+  custom_setup:
+    type: steps
+    default: []
+    description: |
+      Custom setup steps. If you want to use custom tools in custom tests, please install them in the custom steps.
+  tfnotify_version:
+    type: string
+    default: v0.5.2
+    description: |
+      The version of tfnotify. tfnotify is downloaded from the release page.
+      https://github.com/mercari/tfnotify/releases/download/<< parameters.tfnotify_version >>/tfnotify_linux_amd64.tar.gz
+  gomplate_version:
+    type: string
+    default: v3.6.0
+    description: |
+      The version of gomplate. gomplate is downloaded from the release page.
+      https://github.com/hairyhenderson/gomplate/releases/download/<< parameters.gomplate_version >>/gomplate_linux-amd64
+steps:
+  - run:
+      name: Install requirements
+      command: apk add git openssh bash curl
+  # requirement: git
+  # requirement: ssh
+  - checkout:
+      path: src
+  - run:
+      name: Install tfenv
+      # requirement: git
+      command: git clone --depth 1 https://github.com/tfutils/tfenv.git .tfenv
+  - run:
+      name: Install terraform
+      # requirement bash
+      # requirement curl
+      # requirement: unzip
+      command: ".tfenv/bin/tfenv install || :"
+  - run:
+      name: Install tfnotify
+      command: |
+        # requirement curl
+        curl -L https://github.com/mercari/tfnotify/releases/download/<< parameters.tfnotify_version >>/tfnotify_linux_amd64.tar.gz | tar xvzf - tfnotify
+        mkdir bin
+        mv tfnotify bin
+        chmod a+x bin/tfnotify
+  - run:
+      name: Install github-comment-cli
+      command: |
+        curl -L https://github.com/suzuki-shunsuke/github-comment-cli/releases/download/v0.1.0-2/github-comment-cli_0.1.0-2_linux_amd64.tar.gz | tar xvzf - github-comment
+        mv github-comment bin
+        chmod a+x bin/github-comment
+  - run:
+      name: Install gomplate
+      command: |
+        curl -o bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/<< parameters.gomplate_version >>/gomplate_linux-amd64
+        chmod a+x bin/gomplate
+  - steps: << parameters.custom_setup >>
+
