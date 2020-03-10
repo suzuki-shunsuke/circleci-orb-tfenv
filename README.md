@@ -1,5 +1,6 @@
 # circleci-orb-tfenv
 
+[![CircleCI](https://circleci.com/gh/suzuki-shunsuke/circleci-orb-tfenv.svg?style=svg)](https://circleci.com/gh/suzuki-shunsuke/circleci-orb-tfenv)
 [![GitHub last commit](https://img.shields.io/github/last-commit/suzuki-shunsuke/circleci-orb-tfenv.svg)](https://github.com/suzuki-shunsuke/circleci-orb-tfenv)
 [![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/circleci-orb-tfenv/master/LICENSE)
 
