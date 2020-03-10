@@ -62,3 +62,6 @@ jobs:
               # requirement: environment variable CIRCLECI_CLI_TOKEN
               circleci orb publish orb.yml suzuki-shunsuke/tfenv@dev:${CIRCLE_SHA1}
             fi
+            if [ "${CIRCLE_BRANCH:-""}" = "master" ]; then
+              circleci orb publish orb.yml suzuki-shunsuke/tfenv@dev:master
+            fi
