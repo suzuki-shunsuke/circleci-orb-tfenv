@@ -13,7 +13,7 @@ For detail, please see https://circleci.com/orbs/registry/orb/suzuki-shunsuke/tf
 
 https://github.com/suzuki-shunsuke/example-circleci-orb-tfenv
 
-## How does this orb works?
+## How does this orb work?
 
 You can construct the following pipeline for Terraform.
 
