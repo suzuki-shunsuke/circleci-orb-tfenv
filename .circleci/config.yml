@@ -1,0 +1,61 @@
+---
+version: 2.1
+
+orbs:
+  orb-tools: circleci/orb-tools@9.0.1
+
+executors:
+  circleci:
+    docker:
+      - image: circleci/circleci-cli:0.1.6949-alpine
+
+jobs:
+  build:
+    executor: circleci
+    steps:
+      - checkout
+      - orb-tools/pack
+      - orb-tools/validate
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "*"
+  publish:
+    executor: circleci
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Publish orb
+          command: |
+            # requirement: environment variable CIRCLECI_CLI_TOKEN
+            circleci orb publish orb.yml suzuki-shunsuke/tfenv@${CIRCLE_TAG}
+  publish-dev-of-pr:
+    executor: circleci
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Publish orb dev version for pull request
+          command: |
+            if [ -n "${CIRCLE_PULL_REQUEST:-""}" ]; then
+              # requirement: environment variable CIRCLECI_CLI_TOKEN
+              circleci orb publish orb.yml suzuki-shunsuke/tfenv@dev:${CIRCLE_SHA1}
+            fi
+
+workflows:
+  build:
+    jobs:
+      - build
+      - publish-dev-of-pr:
+          requires:
+            - build
+      - publish:
+          requires:
+            - build
+          filters:
+            tags:
+              only:
+                - /.+/
+            branches:
+              ignore: /.*/
