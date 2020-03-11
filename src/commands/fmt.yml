@@ -10,6 +10,26 @@ steps:
       name: terraform fmt -check
       shell: /bin/bash -eu -o pipefail
       command: |
+        echo_command_result_template() {
+          local tempfile; tempfile=$(mktemp)
+          echo "{{ .Env.HEADER }}" > $tempfile
+          echo "" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "$ {{ .Env.COMMAND }}" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "" >> $tempfile
+          echo "<details>" >> $tempfile
+          echo "<summary>Command Output</summary>" >> $tempfile
+          echo "" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "{{ .Env.OUTPUT }}" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "" >> $tempfile
+          echo "</details>" >> $tempfile
+          cat $tempfile
+          rm $tempfile
+        }
+        
         cd src/<< parameters.dir >>
         if ! terraform fmt -check > /dev/null 2>&1; then
           echo_error "Please run 'terraform fmt'"
