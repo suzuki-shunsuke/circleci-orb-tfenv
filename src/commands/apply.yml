@@ -12,6 +12,12 @@ parameters:
     default: "."
     description: |
       the relative path from the working directory to the directory where the repository is checkouted.
+  result_dir:
+    type: string
+    default: changed
+    description: |
+      the relative path from the working directory to the directory where the result of `terraform plan` is written.
+      Actually files are written in << parameters.result_dir >>/<< parameters.dir>>.
 steps:
   - run:
       name: terraform apply
@@ -19,8 +25,8 @@ steps:
       command: |
         root_dir=$PWD
         checkout_dir=$root_dir/<< parameters.checkout_dir >>
-        for changed_file in $(find changed -name changed.txt); do
-          service_env_dir=$(dirname ${changed_file##changed/})
+        for changed_file in $(find << parameters.result_dir >> -name changed.txt); do
+          service_env_dir=$(dirname ${changed_file##<< parameters.result_dir >>})
           cd $checkout_dir/$service_env_dir
           tfenv install
           terraform init
