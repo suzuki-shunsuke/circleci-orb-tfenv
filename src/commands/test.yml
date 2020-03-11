@@ -31,7 +31,7 @@ steps:
       name: tfenv install
       shell: /bin/bash -eu -o pipefail
       command: |
-        cd src/<< parameters.dir >>
+        cd << parameters.dir >>
         # requirement: curl
         # requirement: tfenv
         # requirement: bash
@@ -40,7 +40,7 @@ steps:
       name: terraform init
       shell: /bin/bash -eu -o pipefail
       command: |
-        cd src/<< parameters.dir >>
+        cd << parameters.dir >>
         terraform init
   - fmt:
       dir: << parameters.dir >>
