@@ -10,7 +10,7 @@ steps:
         COLOR_2="\e[32;1m"
         COLOR_OFF="\e[m"
         echo_green() {
-          echo "${COLOR_2}$*${COLOR_OFF}"
+          echo -e "${COLOR_2}$*${COLOR_OFF}"
         }
         echo_error() {
           echo -e "${COLOR_1}$*${COLOR_OFF}" >&2
