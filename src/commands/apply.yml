@@ -28,10 +28,14 @@ steps:
         for changed_file in $(find << parameters.result_dir >> -name changed.txt); do
           service_env_dir=$(dirname ${changed_file##<< parameters.result_dir >>})
           cd $checkout_dir/$service_env_dir
+
+          applyfile=$root_dir/<< parameters.result_dir >>/$service_env_dir/apply.txt
+
           tfenv install
           terraform init
+
           set +o errexit
-          terraform apply -auto-approve << parameters.apply_options >> > /tmp/apply.txt
+          terraform apply -auto-approve << parameters.apply_options >> > $applyfile
           code="$?"
           set -e
 
@@ -40,7 +44,7 @@ steps:
           if [ $code -ne 0 ]; then
             title=":x: [$service_env_dir] terraform apply is failed"
           fi
-          cat /tmp/apply.txt | tfnotify apply --title $title
+          cat $applyfile | tfnotify apply --title $title
           if [ $code -ne 0 ]; then
             exit $code
           fi
