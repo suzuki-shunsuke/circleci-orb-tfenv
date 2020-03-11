@@ -1,4 +1,11 @@
-description: Run `terraform fmt -check` to test if the code is formatted.
+description: |
+  Run `terraform fmt -check` to test if the code is formatted.
+
+  Requirements
+  * bash
+  * terraform
+  * gomplate
+  * github-comment
 parameters:
   dir:
     type: string
