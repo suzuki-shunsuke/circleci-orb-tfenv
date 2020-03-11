@@ -6,6 +6,12 @@ steps:
       name: Check changed
       shell: /bin/bash -eu -o pipefail
       command: |
+        echo_green() {
+          COLOR_2="\e[32;1m"
+          COLOR_OFF="\e[m"
+          echo -e "${COLOR_2}$*${COLOR_OFF}"
+        }
+
         if [ $(find changed -name changed.txt | wc -l) -eq 0 ]; then
           echo_green "No states are changed"
           github-comment -template ":white_check_mark: No states are changed"
