@@ -1,5 +1,10 @@
 description: |
   Run `terraform apply` and add a comment to the pull request or Git commit.
+  Requirements
+  * bash
+  * curl
+  * tfenv
+  * tfnotify
 parameters:
   apply_options:
     type: string
@@ -21,6 +26,7 @@ parameters:
 steps:
   - run:
       name: terraform apply
+      # requirement: bash
       shell: /bin/bash -eu -o pipefail
       command: |
         root_dir=$PWD
@@ -31,6 +37,8 @@ steps:
 
           applyfile=$root_dir/<< parameters.result_dir >>/$service_env_dir/apply.txt
 
+          # requirement: curl
+          # requirement: tfenv
           tfenv install
           terraform init
 
@@ -44,6 +52,7 @@ steps:
           if [ $code -ne 0 ]; then
             title=":x: [$service_env_dir] terraform apply is failed"
           fi
+          # requirement: tfnotify
           cat $applyfile | tfnotify apply --title $title
           if [ $code -ne 0 ]; then
             exit $code
