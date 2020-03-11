@@ -9,12 +9,6 @@ parameters:
       For example, `-refresh=false -parallelism=20`.
 steps:
   - run:
-      name: Install requirements
-      command: apk add ca-certificates bash curl
-  # requirement: ca-certificates
-  - attach_workspace:
-      at: .
-  - run:
       name: terraform apply
       shell: /bin/bash -eu -o pipefail
       command: |
