@@ -1,6 +1,13 @@
 description: |
   Check the result of `terraform plan`.
   This command assume that the repository is `monorepo`, and if no states are changed, add a comment to the pull request or Git commit.
+parameters:
+  result_dir:
+    type: string
+    default: changed
+    description: |
+      the relative path from the working directory to the directory where the result of `terraform plan` is written.
+      Actually files are written in << parameters.result_dir >>/<< parameters.dir>>.
 steps:
   - run:
       name: Check changed
@@ -12,7 +19,7 @@ steps:
           echo -e "${COLOR_2}$*${COLOR_OFF}"
         }
 
-        if [ $(find changed -name changed.txt | wc -l) -eq 0 ]; then
+        if [ $(find << parameters.result_dir >> -name changed.txt | wc -l) -eq 0 ]; then
           echo_green "No states are changed"
           github-comment -template ":white_check_mark: No states are changed"
         fi
