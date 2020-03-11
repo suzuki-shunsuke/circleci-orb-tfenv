@@ -5,6 +5,11 @@ parameters:
     default: alpine
     description: |
       Custom executor. The executor must use an Alpine based Docker image.
+  setup_dir:
+    type: string
+    default: ""
+    description: |
+      The relative path from the working directory to the directory where tools are installed.
 description: |
   Check the result of `terraform plan`.
   If no states are changed, add a comment to the pull request or Git commit.
@@ -13,4 +18,5 @@ steps:
   - setup_bash_env
   - attach_workspace:
       at: "."
-  - check_changed
+  - check_changed:
+      setup_dir: << parameters.setup_dir >>
