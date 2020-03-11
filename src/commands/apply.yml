@@ -28,7 +28,10 @@ steps:
           terraform apply -auto-approve << parameters.apply_options >> > /tmp/apply.txt
           code="$?"
           set -e
+
           cd $root_dir/src
           cat /tmp/apply.txt | tfnotify apply --title "Apply $service_env_dir"
-          exit $code
+          if [ $code -ne 0 ]; then
+            exit $code
+          fi
         done
