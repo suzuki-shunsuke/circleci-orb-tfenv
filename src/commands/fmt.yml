@@ -36,6 +36,11 @@ steps:
           cat $tempfile
           rm $tempfile
         }
+        echo_error() {
+          COLOR_1="\e[31;1m"
+          COLOR_OFF="\e[m"
+          echo -e "${COLOR_1}$*${COLOR_OFF}" >&2
+        }
         
         cd src/<< parameters.dir >>
         if ! terraform fmt -check > /dev/null 2>&1; then
