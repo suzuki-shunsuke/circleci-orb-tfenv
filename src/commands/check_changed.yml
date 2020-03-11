@@ -1,6 +1,10 @@
 description: |
   Check the result of `terraform plan`.
   This command assume that the repository is `monorepo`, and if no states are changed, add a comment to the pull request or Git commit.
+
+  Requirements
+  * bash
+  * github-comment
 parameters:
   result_dir:
     type: string
@@ -11,6 +15,7 @@ parameters:
 steps:
   - run:
       name: Check changed
+      # requirement: bash
       shell: /bin/bash -eu -o pipefail
       command: |
         echo_green() {
@@ -21,5 +26,6 @@ steps:
 
         if [ $(find << parameters.result_dir >> -name changed.txt | wc -l) -eq 0 ]; then
           echo_green "No states are changed"
+          # requirement: github-comment
           github-comment -template ":white_check_mark: No states are changed"
         fi
