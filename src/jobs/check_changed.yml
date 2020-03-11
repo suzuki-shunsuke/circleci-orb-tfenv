@@ -11,4 +11,6 @@ description: |
 steps:
   - install_bash
   - setup_bash_env
+  - attach_workspace:
+      at: "."
   - check_changed

@@ -3,12 +3,6 @@ description: |
   This command assume that the repository is `monorepo`, and if no states are changed, add a comment to the pull request or Git commit.
 steps:
   - run:
-      name: Install requirements
-      command: apk add ca-certificates bash curl
-  # requirement: ca-certificates
-  - attach_workspace:
-      at: .
-  - run:
       name: Check changed
       shell: /bin/bash -eu -o pipefail
       command: |
