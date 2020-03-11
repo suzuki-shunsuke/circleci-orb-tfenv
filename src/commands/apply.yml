@@ -7,15 +7,21 @@ parameters:
     description: |
       The options of `terraform apply` command. The option `-auto-approve` is set automatically.
       For example, `-refresh=false -parallelism=20`.
+  checkout_dir:
+    type: string
+    default: "."
+    description: |
+      the relative path from the working directory to the directory where the repository is checkouted.
 steps:
   - run:
       name: terraform apply
       shell: /bin/bash -eu -o pipefail
       command: |
         root_dir=$PWD
+        checkout_dir=$root_dir/<< parameters.checkout_dir >>
         for changed_file in $(find changed -name changed.txt); do
           service_env_dir=$(dirname ${changed_file##changed/})
-          cd $root_dir/src/$service_env_dir
+          cd $checkout_dir/$service_env_dir
           tfenv install
           terraform init
           set +o errexit
@@ -23,7 +29,7 @@ steps:
           code="$?"
           set -e
 
-          cd $root_dir/src
+          cd $checkout_dir
           title=":white_check_mark: [$service_env_dir] terraform apply is succeeded"
           if [ $code -ne 0 ]; then
             title=":x: [$service_env_dir] terraform apply is failed"

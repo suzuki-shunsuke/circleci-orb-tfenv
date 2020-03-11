@@ -18,3 +18,4 @@ steps:
   - setup_bash_env
   - apply:
       apply_options: << parameters.apply_options >>
+      checkout_dir: src
