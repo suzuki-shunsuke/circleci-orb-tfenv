@@ -7,6 +7,12 @@ parameters:
     default: alpine
     description: |
       Custom executor. The executor must use an Alpine based Docker image.
+  checkout:
+    type: steps
+    default:
+      - checkout
+    description: |
+      The step to checkout code.
   custom_setup:
     type: steps
     default: []
@@ -25,10 +31,7 @@ steps:
         if command -v apk; then
           apk add git openssh bash curl
         fi
-  # requirement: git
-  # requirement: ssh
-  - checkout:
-      path: src
+  - steps: << parameters.checkout >>
   - setup:
       custom_setup: << parameters.custom_setup >>
       tfnotify_version: << parameters.tfnotify_version >>
