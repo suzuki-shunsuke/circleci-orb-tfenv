@@ -20,6 +20,12 @@ parameters:
     default: false
     description: |
       If this parameter is `true`, `terraform plan` isn't executed.
+  tfnotify_config_path:
+    type: string
+    default: ""
+    description: |
+      the relative path from the workspace root directory to tfnotify configuration file path.
+      The path is set by `--config`. If this parameter is omitted, `--config` isn't set.
 steps:
   - run:
       name: Install requirements
@@ -53,6 +59,7 @@ steps:
         - plan:
             dir: << parameters.dir >>
             plan_options: << parameters.plan_options >>
+            tfnotify_config_path: << parameters.tfnotify_config_path >>
   - persist_to_workspace:
       root: .
       paths:
