@@ -25,6 +25,10 @@ steps:
         if command -v apk; then
           apk add git openssh bash curl
         fi
+  # requirement: git
+  # requirement: ssh
+  - checkout:
+      path: src
   - setup:
       custom_setup: << parameters.custom_setup >>
       tfnotify_version: << parameters.tfnotify_version >>
