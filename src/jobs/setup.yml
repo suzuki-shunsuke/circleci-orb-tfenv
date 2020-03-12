@@ -18,6 +18,17 @@ parameters:
     default: []
     description: |
       Custom setup steps. If you want to use custom tools in custom tests, please install them in the custom steps.
+  dir:
+    type: string
+    default: "."
+    description: |
+      The relative path from the workspace root directory to the directory where tools are installed.
+      << parameters.dir >>/
+        bin/
+          tfnotify
+          gomplate
+          github-comment
+        .tfenv
   tfnotify_version:
     type: string
     default: v0.5.2
@@ -42,6 +53,7 @@ steps:
       custom_setup: << parameters.custom_setup >>
       tfnotify_version: << parameters.tfnotify_version >>
       gomplate_version: << parameters.gomplate_version >>
+      dir: << parameters.dir >>
   - persist_to_workspace:
       root: .
       paths:
