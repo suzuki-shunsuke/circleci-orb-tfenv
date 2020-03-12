@@ -10,7 +10,7 @@ parameters:
   dir:
     type: string
     description: |
-      the relative path from the repository root directory to Terraform configuration root directory.
+      the relative path from the workspace root directory to Terraform configuration root directory.
       In the directory, `terraform fmt -check` is executed.
 steps:
   - run:
@@ -42,7 +42,7 @@ steps:
           echo -e "${COLOR_1}$*${COLOR_OFF}" >&2
         }
         
-        cd src/<< parameters.dir >>
+        cd << parameters.dir >>
         if ! terraform fmt -check > /dev/null 2>&1; then
           echo_error "Please run 'terraform fmt'"
           terraform fmt -diff -write=false
