@@ -16,13 +16,12 @@ parameters:
     type: string
     default: "."
     description: |
-      the relative path from the working directory to the directory where the repository is checkouted.
+      The relative path from the working directory to the directory where the repository is checkouted.
   result_dir:
     type: string
-    default: changed
+    default: .ci/results
     description: |
-      the relative path from the working directory to the directory where the result of `terraform plan` is written.
-      Actually files are written in << parameters.result_dir >>/<< parameters.dir>>.
+      The relative path from the working directory to the directory where the result of `test` command is written.
 steps:
   - run:
       name: terraform apply

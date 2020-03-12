@@ -6,6 +6,12 @@ parameters:
     description: |
       the relative path from the repository root directory to Terraform configuration root directory.
       In the directory, Terraform commands such as `terraform plan` are executed.
+  result_dir:
+    type: string
+    default: .ci/results
+    description: |
+      the relative path from the working directory to the directory where the result of `terraform plan` is written.
+      Actually files are written in << parameters.result_dir >>/<< parameters.dir>>.
   custom_tests:
     type: steps
     default: []
@@ -60,7 +66,8 @@ steps:
             dir: << parameters.dir >>
             plan_options: << parameters.plan_options >>
             tfnotify_config_path: << parameters.tfnotify_config_path >>
+            result_dir: << parameters.result_dir >>
   - persist_to_workspace:
       root: .
       paths:
-        - "changed/<< parameters.dir >>/*"
+        - "<< parameters.result_dir >>/<< parameters.dir >>/*"

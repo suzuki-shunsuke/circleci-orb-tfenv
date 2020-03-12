@@ -20,7 +20,7 @@ parameters:
       The path is set by `--config`. If this parameter is omitted, `--config` isn't set.
   result_dir:
     type: string
-    default: changed
+    default: .ci/results
     description: |
       the relative path from the working directory to the directory where the result of `terraform plan` is written.
       Actually files are written in << parameters.result_dir >>/<< parameters.dir>>.

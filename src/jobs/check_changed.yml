@@ -7,13 +7,12 @@ parameters:
       Custom executor. The executor must use an Alpine based Docker image.
   result_dir:
     type: string
-    default: ".ci/plan_results"
+    default: .ci/results
     description: |
-      the relative path from the working directory to the directory where the result of `terraform plan` is written.
-      Actually files are written in << parameters.result_dir >>/<< parameters.dir>>.
+      The relative path from the working directory to the directory where the result of `test` command is written.
   setup_dir:
     type: string
-    default: ""
+    default: "."
     description: |
       The relative path from the working directory to the directory where tools are installed.
 description: |

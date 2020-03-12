@@ -13,9 +13,20 @@ parameters:
     description: |
       The options of `terraform apply` command. The option `-auto-approve` is set automatically.
       For example, `-refresh=false -parallelism=20`.
+  checkout_dir:
+    type: string
+    default: "."
+    description: |
+      The relative path from the working directory to the directory where the repository is checkouted.
+  result_dir:
+    type: string
+    default: .ci/results
+    description: |
+      The relative path from the working directory to the directory where the result of `test` command is written.
 steps:
   - install_bash
   - setup_bash_env
   - apply:
       apply_options: << parameters.apply_options >>
-      checkout_dir: src
+      checkout_dir: << parameters.checkout_dir >>
+      result_dir: << parameters.result_dir >>
