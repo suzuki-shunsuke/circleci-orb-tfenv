@@ -5,13 +5,21 @@ parameters:
   dir:
     type: string
     description: |
-      the relative path from the repository root directory to Terraform configuration root directory.
+      The relative path from the repository root directory to Terraform configuration root directory.
       In the directory, Terraform commands such as `terraform plan` are executed.
+  result_dir:
+    type: string
+    default: .ci/results
+    description: |
+      The relative path from the working directory to the directory where the result of this step is written.
+      Actually files are written in << parameters.result_dir >>/<< parameters.dir >>.
   custom_tests:
     type: steps
     default: []
     description: |
       Custom test steps. You can add custom tests freely.
+      If you want to persist the result of custom tests to the workspace,
+      create files on << parameters.result_dir >>/<< parameters.dir >>.
   executor:
     type: executor
     default: alpine
@@ -28,6 +36,12 @@ parameters:
     default: false
     description: |
       If this parameter is `true`, `terraform plan` isn't executed.
+  tfnotify_config_path:
+    type: string
+    default: ""
+    description: |
+      The relative path from the workspace root directory to tfnotify configuration file path.
+      The path is set by `--config`. If this parameter is omitted, `--config` isn't set.
 steps:
   - install_bash
   - setup_bash_env
@@ -36,3 +50,4 @@ steps:
       custom_tests: << parameters.custom_tests >>
       plan_options: << parameters.plan_options >>
       skip_plan: << parameters.skip_plan >>
+      tfnotify_config_path: << parameters.tfnotify_config_path >>

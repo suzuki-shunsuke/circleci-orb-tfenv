@@ -3,14 +3,14 @@ parameters:
   dir:
     type: string
     description: |
-      the relative path from the repository root directory to Terraform configuration root directory.
+      the relative path from the workspace root directory to Terraform configuration root directory.
       In the directory, `terraform validate` is executed.
 steps:
   - run:
       name: terraform validate
       shell: /bin/bash -eu -o pipefail
       command: |
-        cd src/<< parameters.dir >>
+        cd << parameters.dir >>
         vlog=$(mktemp)
         if ! terraform validate -no-color > $vlog 2>&1; then
           if [ -n "${CIRCLE_PULL_REQUEST:-""}" ]; then

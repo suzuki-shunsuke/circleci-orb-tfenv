@@ -1,5 +1,12 @@
-description: Install Bash
+description: |
+  If bash isn't installed on Alpine, install Bash.
+  If bash is already installed or the container image isn't Alpine, do nothing.
 steps:
   - run:
-      name: Install Bash
-      command: apk add bash
+      name: Install Bash on Alpine
+      command: |
+        if ! command -v bash; then
+          if command -v apk; then
+            apk add bash
+          fi
+        fi

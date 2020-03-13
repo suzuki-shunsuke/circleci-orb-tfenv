@@ -16,13 +16,21 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - test:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /.*/
           
       - publish-dev-of-pr:
           requires:
             - build
+            - test
       - publish:
           requires:
             - build
+            - test
           filters:
             tags:
               only: /.*/
@@ -40,6 +48,17 @@ jobs:
           root: .
           paths:
             - "*"
+  test:
+    executor: circleci
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Validate config
+          command: |
+            apk add bash
+            bash scripts/validate.sh
+
   publish:
     executor: circleci
     steps:

@@ -1,18 +1,39 @@
 description: |
   Check the result of `terraform plan`.
   This command assume that the repository is `monorepo`, and if no states are changed, add a comment to the pull request or Git commit.
+
+  Requirements
+  * bash
+  * github-comment
+parameters:
+  result_dir:
+    type: string
+    default: .ci/results
+    description: |
+      The relative path from the working directory to the directory where the result of `test` command is written.
+  setup_dir:
+    type: string
+    default: "."
+    description: |
+      The relative path from the working directory to the directory where tools are installed.
 steps:
   - run:
-      name: Install requirements
-      command: apk add ca-certificates bash curl
-  # requirement: ca-certificates
-  - attach_workspace:
-      at: .
-  - run:
       name: Check changed
+      # requirement: bash
       shell: /bin/bash -eu -o pipefail
       command: |
-        if [ $(find changed -name changed.txt | wc -l) -eq 0 ]; then
+        echo_green() {
+          COLOR_2="\e[32;1m"
+          COLOR_OFF="\e[m"
+          echo -e "${COLOR_2}$*${COLOR_OFF}"
+        }
+
+        if [ -n "<< parameters.setup_dir >>" ]; then
+          export PATH="<< parameters.setup_dir >>/bin:$PATH"
+        fi
+
+        if [ $(find << parameters.result_dir >> -name changed.txt | wc -l) -eq 0 ]; then
           echo_green "No states are changed"
+          # requirement: github-comment
           github-comment -template ":white_check_mark: No states are changed"
         fi

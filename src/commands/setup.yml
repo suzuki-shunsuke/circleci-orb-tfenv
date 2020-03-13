@@ -1,6 +1,17 @@
 description: |
-  Checkout source code and install some tools such as tfenv and tfnotify.
+  Install some tools such as tfenv and tfnotify.
 parameters:
+  dir:
+    type: string
+    default: "."
+    description: |
+      The relative path from the workspace root directory to the directory where tools are installed.
+      << parameters.dir >>/
+        bin/
+          tfnotify
+          gomplate
+          github-comment
+        .tfenv
   custom_setup:
     type: steps
     default: []
@@ -20,40 +31,29 @@ parameters:
       https://github.com/hairyhenderson/gomplate/releases/download/<< parameters.gomplate_version >>/gomplate_linux-amd64
 steps:
   - run:
-      name: Install requirements
-      command: apk add git openssh bash curl
-  # requirement: git
-  # requirement: ssh
-  - checkout:
-      path: src
-  - run:
       name: Install tfenv
       # requirement: git
-      command: git clone --depth 1 https://github.com/tfutils/tfenv.git .tfenv
-  - run:
-      name: Install terraform
-      # requirement bash
-      # requirement curl
-      # requirement: unzip
-      command: ".tfenv/bin/tfenv install || :"
+      command: git clone --depth 1 https://github.com/tfutils/tfenv.git << parameters.dir>>/.tfenv
   - run:
       name: Install tfnotify
       command: |
         # requirement curl
         curl -L https://github.com/mercari/tfnotify/releases/download/<< parameters.tfnotify_version >>/tfnotify_linux_amd64.tar.gz | tar xvzf - tfnotify
-        mkdir bin
-        mv tfnotify bin
-        chmod a+x bin/tfnotify
+        bin_dir=<< parameters.dir >>/bin
+        mkdir $bin_dir
+        mv tfnotify $bin_dir
+        chmod a+x $bin_dir/tfnotify
   - run:
       name: Install github-comment-cli
       command: |
         curl -L https://github.com/suzuki-shunsuke/github-comment-cli/releases/download/v0.1.0-2/github-comment-cli_0.1.0-2_linux_amd64.tar.gz | tar xvzf - github-comment
-        mv github-comment bin
-        chmod a+x bin/github-comment
+        bin_dir=<< parameters.dir >>/bin
+        mv github-comment $bin_dir
+        chmod a+x $bin_dir/github-comment
   - run:
       name: Install gomplate
       command: |
-        curl -o bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/<< parameters.gomplate_version >>/gomplate_linux-amd64
-        chmod a+x bin/gomplate
+        gomplate_path=<< parameters.dir >>/bin/gomplate
+        curl -o $gomplate_path -sSL https://github.com/hairyhenderson/gomplate/releases/download/<< parameters.gomplate_version >>/gomplate_linux-amd64
+        chmod a+x $gomplate_path
   - steps: << parameters.custom_setup >>
-

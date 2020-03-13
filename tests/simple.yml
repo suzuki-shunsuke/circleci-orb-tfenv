@@ -1,0 +1,5 @@
+workflows:
+  build:
+    jobs:
+      - setup:
+          name: setup
