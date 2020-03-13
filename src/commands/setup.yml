@@ -35,12 +35,6 @@ steps:
       # requirement: git
       command: git clone --depth 1 https://github.com/tfutils/tfenv.git << parameters.dir>>/.tfenv
   - run:
-      name: Install terraform
-      # requirement bash
-      # requirement curl
-      # requirement: unzip
-      command: "<< parameters.dir >>/.tfenv/bin/tfenv install || :"
-  - run:
       name: Install tfnotify
       command: |
         # requirement curl
