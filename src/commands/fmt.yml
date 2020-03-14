@@ -9,8 +9,9 @@ description: |
 parameters:
   dir:
     type: string
+    default: "."
     description: |
-      the relative path from the workspace root directory to Terraform configuration root directory.
+      The relative path from the workspace root directory to Terraform configuration root directory.
       In the directory, `terraform fmt -check` is executed.
 steps:
   - run:
