@@ -79,7 +79,7 @@ jobs:
           command: |
             if [ -n "${CIRCLE_PULL_REQUEST:-""}" ]; then
               # requirement: environment variable CIRCLECI_CLI_TOKEN
-              circleci orb publish orb.yml suzuki-shunsuke/tfenv@dev:${CIRCLE_SHA1}
+              circleci orb publish orb.yml suzuki-shunsuke/tfenv@dev:pr-$(basename ${CIRCLE_PULL_REQUEST})
             fi
             if [ "${CIRCLE_BRANCH:-""}" = "master" ]; then
               circleci orb publish orb.yml suzuki-shunsuke/tfenv@dev:master
