@@ -13,8 +13,8 @@ for file in tests/*; do
   else
     COLOR_1="\e[31;1m"
     COLOR_OFF="\e[m"
-    echo "${COLOR_1}$file is failed${COLOR_OFF}" >&2
-    echo "$filepath" >&2
+    echo -e "${COLOR_1}$file is failed${COLOR_OFF}" >&2
+    cat "$filepath" >&2
     exit 1
   fi
 done

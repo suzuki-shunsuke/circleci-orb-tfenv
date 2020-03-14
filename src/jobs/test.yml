@@ -43,7 +43,7 @@ parameters:
       The relative path from the workspace root directory to tfnotify configuration file path.
       The path is set by `--config`. If this parameter is omitted, `--config` isn't set.
 steps:
-  - install_bash
+  - terraform/install_bash
   - setup_bash_env
   - run:
       name: Install requirements on Alpine

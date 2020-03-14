@@ -24,9 +24,9 @@ parameters:
     description: |
       The relative path from the working directory to the directory where the result of `test` command is written.
 steps:
-  - install_bash
+  - terraform/install_bash
   - setup_bash_env
-  - apply:
+  - terraform/apply:
       apply_options: << parameters.apply_options >>
       checkout_dir: << parameters.checkout_dir >>
       result_dir: << parameters.result_dir >>

@@ -1,0 +1,14 @@
+description: |
+  Install tfenv on the workspace
+parameters:
+  dir:
+    type: string
+    default: "."
+    description: |
+      The relative path from the workspace root directory to the directory where tfenv is installed.
+      << parameters.dir >>/.tfenv
+steps:
+  - run:
+      name: Install tfenv
+      # requirement: git
+      command: git clone --depth 1 https://github.com/tfutils/tfenv.git << parameters.dir>>/.tfenv

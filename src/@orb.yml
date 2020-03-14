@@ -9,5 +9,7 @@ description: |
   * The configuration file of tfnotify is required on the repository root directory.
   * The project Environment variable "GITHUB_TOKEN" is required to post a comment to GitHub comment or pull request
   * .terraform-version is required for tfenv
+orbs:
+  terraform: suzuki-shunsuke/terraform@0.1.0
 display:
   source_url: https://github.com/suzuki-shunsuke/circleci-orb-tfenv
