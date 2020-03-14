@@ -10,6 +10,12 @@ This Orb assumes tfenv is used at the target project.
 
 For detail, please see https://circleci.com/orbs/registry/orb/suzuki-shunsuke/tfenv
 
+## suzuki-shunsuke/terraform
+
+From version 0.3.0, some commands and jobs which don't depend on tfenv are replaced with [suzuki-shunsuke/terraform](https://circleci.com/orbs/registry/orb/suzuki-shunsuke/terraform).
+
+https://github.com/suzuki-shunsuke/circleci-orb-terraform
+
 ## Sample repository
 
 https://github.com/suzuki-shunsuke/example-circleci-orb-tfenv
