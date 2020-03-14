@@ -45,6 +45,15 @@ parameters:
 steps:
   - install_bash
   - setup_bash_env
+  - run:
+      name: Install requirements on Alpine
+      command: |
+        if command -v apk; then
+          apk add ca-certificates curl
+        fi
+  # requirement: ca-certificates
+  - attach_workspace:
+      at: .
   - test:
       dir: << parameters.dir >>
       custom_tests: << parameters.custom_tests >>
