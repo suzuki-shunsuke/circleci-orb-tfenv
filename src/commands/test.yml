@@ -34,12 +34,6 @@ parameters:
       The path is set by `--config`. If this parameter is omitted, `--config` isn't set.
 steps:
   - run:
-      name: Install requirements
-      command: apk add ca-certificates bash curl
-  # requirement: ca-certificates
-  - attach_workspace:
-      at: .
-  - run:
       name: tfenv install
       shell: /bin/bash -eu -o pipefail
       command: |
