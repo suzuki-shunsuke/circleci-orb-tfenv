@@ -49,7 +49,9 @@ steps:
           apk add git openssh bash curl
         fi
   - steps: << parameters.checkout >>
-  - setup:
+  - install_tfenv:
+      dir: << parameters.dir >>
+  - terraform/setup:
       custom_setup: << parameters.custom_setup >>
       tfnotify_version: << parameters.tfnotify_version >>
       gomplate_version: << parameters.gomplate_version >>

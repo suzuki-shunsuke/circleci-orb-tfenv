@@ -5,6 +5,7 @@ usage:
   version: 2.1
   orbs:
     tfenv: suzuki-shunsuke/tfenv@dev:0.2.0
+    terraform: suzuki-shunsuke/terraform@dev:pr-1
   workflows:
     build:
       jobs:
