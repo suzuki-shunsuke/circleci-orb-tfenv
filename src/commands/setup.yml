@@ -7,11 +7,11 @@ parameters:
     description: |
       The relative path from the workspace root directory to the directory where tools are installed.
       << parameters.dir >>/
+        .tfenv
         bin/
           tfnotify
           gomplate
           github-comment
-        .tfenv
   custom_setup:
     type: steps
     default: []

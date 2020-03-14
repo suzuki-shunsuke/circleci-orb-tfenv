@@ -1,0 +1,28 @@
+description: |
+  Install tflint on the workspace
+parameters:
+  install_dir:
+    type: string
+    default: bin
+    description: |
+      The relative path from the workspace root directory to the directory where tflint are installed.
+  version:
+    type: string
+    default: v0.15.1
+    description: |
+      The version of tfnotify. tfnotify is downloaded from the release page.
+      https://github.com/terraform-linters/tflint/releases/download/<< parameters.version >>/tflint_linux_amd64.zip
+steps:
+  - run:
+      name: Install tflint
+      shell: /bin/bash -eu -o pipefail
+      command: |
+        bin_dir=$PWD/<< parameters.install_dir >>
+        mkdir -p $bin_dir
+        dirpath=$(mktemp -d)
+        cd $dirpath
+        curl -LO https://github.com/terraform-linters/tflint/releases/download/<< parameters.version >>/tflint_linux_amd64.zip
+        unzip tflint_linux_amd64.zip
+        mv tflint $bin_dir/tflint
+        chmod a+x $bin_dir/tflint
+        rm -R $dirpath
