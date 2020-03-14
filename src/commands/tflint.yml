@@ -1,0 +1,57 @@
+description: |
+  Run `tflint`
+
+  Requirements
+  * bash
+  * tflint
+  * github-comment
+parameters:
+  dir:
+    type: string
+    default: "."
+    description: |
+      The relative path from the workspace root directory to Terraform configuration root directory.
+      In the directory, `tflint` is executed.
+steps:
+  - run:
+      name: tflint
+      shell: /bin/bash -eu -o pipefail
+      command: |
+        COLOR_1="\e[31;1m"
+        COLOR_OFF="\e[m"
+        echo_error() {
+          echo -e "${COLOR_1}$*${COLOR_OFF}" >&2
+        }
+        echo_command_result_template() {
+          local tempfile; tempfile=$(mktemp)
+          echo "{{ .Env.HEADER }}" > $tempfile
+          echo "" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "$ {{ .Env.COMMAND }}" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "" >> $tempfile
+          echo "<details>" >> $tempfile
+          echo "<summary>Command Output</summary>" >> $tempfile
+          echo "" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "{{ .Env.OUTPUT }}" >> $tempfile
+          echo "\`\`\`" >> $tempfile
+          echo "" >> $tempfile
+          echo "</details>" >> $tempfile
+          cat $tempfile
+          rm $tempfile
+        }
+
+        cd << parameters.dir >>
+        filepath=$(mktemp)
+        if ! tflint > $filepath 2>&1; then
+          echo_error "tflint is failure"
+          echo_command_result_template |
+            HEADER=":x: [Job Link]($CIRCLE_BUILD_URL) [<< parameters.dir >>] tflint is failure" \
+            COMMAND="tflint" \
+            OUTPUT=$(cat $filepath) \
+            gomplate | github-comment
+          rm $filepath
+          exit 1
+        fi
+        rm $filepath
