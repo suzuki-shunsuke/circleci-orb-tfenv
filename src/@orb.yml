@@ -1,6 +1,10 @@
 ---
 version: 2.1
 description: |
+  Deprecated
+
+  Please use the orb suzuki-shunsuke/terraform instead of this orb.
+
   Lint and test and apply Terraform configuration.
   We assume tfenv is used at the target project.
   
